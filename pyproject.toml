@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flow-state"
+version = "0.1.0"
+description = "Entropy-based stream observation and anomaly detection — spline observers with learning engines"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "SuperInstance" }]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "click>=8.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
+
+[project.scripts]
+flow-state = "flow_state.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["flow_state*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
