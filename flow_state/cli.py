@@ -48,11 +48,12 @@ def observe(
         observer_id=observer_id,
         poll_interval=interval or 10.0,
     )
-    if once or interval is None and not once:
-        # Default: run once
+    if once or interval is None:
+        # Default: run once (if --once flag, or if neither --once nor --interval given)
         count = observer.run_cycle()
         click.echo(f"Processed {count} new capture(s).")
     else:
+        # Continuous mode: --interval was explicitly set without --once
         click.echo(f"Observing {capture_dir} (poll every {observer.poll_interval}s). Ctrl-C to stop.")
         observer.run()
 

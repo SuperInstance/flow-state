@@ -27,11 +27,11 @@ def _shannon_entropy(data: dict[str, Any]) -> float:
     Uses the frequency of unique characters in the canonical JSON string
     as a proxy for information content. Returns a value in [0, 1].
     """
+    # Empty or trivially empty containers carry no information
+    if not data or (isinstance(data, (dict, list)) and len(data) == 0):
+        return 0.0
     text = json.dumps(data, sort_keys=True, default=str)
     if not text or len(text) < 2:
-        return 0.0
-    # An empty or trivially-empty container has no information
-    if data is None or (isinstance(data, (dict, list)) and len(data) == 0):
         return 0.0
     # Count character frequencies
     freq: dict[str, int] = {}
