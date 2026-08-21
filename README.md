@@ -2,22 +2,25 @@
 
 **Entropy-based stream observation and anomaly detection — spline observers with learning engines.**
 
+<p align="center">
+  <img src="assets/images/hero.jpg" width="680" alt="A wall of brass gauges glowing amber in the dark — every needle reading the current, one dial lit brighter: the anomaly, already caught." />
+</p>
+
+*The observer's wall: the stream is invisible, but its temperature is always on dial.*
+
 `flow-state` is a lightweight Python library for monitoring data streams by extracting statistical features (especially Shannon entropy) and flagging anomalies when those features deviate from a rolling baseline.
 
 ## How It Works
 
+```mermaid
+flowchart LR
+    A["Capture Dir<br/>(any source)"] -- "watched .json files" --> B["Spline Observer"]
+    B -- "feature traces" --> C["Learning Engine"]
+    B -. "entropy · density ·<br/>SNR · momentum" .- B2["extracted features"]
+    C -- "deviation score · severity ·<br/>training manifest" --> D[("Anomaly<br/>Manifests")]
 ```
-┌──────────────┐     .json files     ┌──────────────┐     trace files     ┌────────────────┐
-│ Capture Dir  │ ──────────────────▶ │   Spline     │ ──────────────────▶ │  Learning      │
-│ (any source) │    (watched)        │  Observer    │   (feature traces)  │  Engine        │
-└──────────────┘                     └──────────────┘                     └───────┬────────┘
-                                          │                                       │
-                                     extracts:                           flags anomalies
-                                     • entropy                           • deviation score
-                                     • visual density                    • severity label
-                                     • signal/noise ratio                • full manifest
-                                     • momentum vector                     (training payload)
-```
+
+The same pipeline, step by step:
 
 1. **SplineObserver** watches a directory for incoming JSON files, extracts features (entropy, density, signal-to-noise, momentum), and writes structured trace files.
 2. **LearningEngine** consumes those traces, maintains a rolling baseline (mean + std), and emits anomaly manifests when entropy crosses a configurable threshold.
